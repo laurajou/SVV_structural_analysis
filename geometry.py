@@ -74,7 +74,6 @@ class Geometry:
         """
         self.calc_z_dists()
         for n, area in enumerate(self.boom_areas):
-            print(area, self.z_dists[n] ** 2, self.Iyy)
             self.Iyy += area * self.z_dists[n] ** 2
 
     def moment_inertia_Izy(self):
