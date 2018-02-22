@@ -27,8 +27,10 @@ class Boom():
         self.dist_neutral_axis = distance_point_line(self.coordinates, self.neutral_axis)
 
     def calculate_area(self, aileron_geometry):
+        # TODO: ONLY WORKS IF COORDINATE ORIGIN IS IN THE LINE OF SYMMETRY, THIS NEEDS TO BE CHANGED FOR GENERALITY!
         """
         Calculate area of boom following formula 20.1 of Megson
+
         :param aileron_geometry: instance of class Geometry describing the geometrical properties of the cross-section
         :return: area of boom
         """

@@ -100,7 +100,7 @@ def main():
     aileron_geometry = geometry.Geometry(21, booms)
 
     # calculate areas of all booms
-    for iteration, element in enumerate(booms):
+    for element in booms:
         element.calculate_area(aileron_geometry)
     # insert them in aileron_geometry object
     aileron_geometry.get_areas()
