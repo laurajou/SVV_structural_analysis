@@ -1,5 +1,7 @@
 import math
 import matplotlib.pyplot as plt
+import boom
+import geometry
 
 def distance(point1, point2):
     z_1, y_1 = point1[0], point1[1]
@@ -29,4 +31,30 @@ def plot_boom_coordinates(coordinates):
     plt.axis([-500, 500, -500, 500])
     plt.scatter(zs, ys)
     plt.show()
+
+
+def get_list(booms, parameter_position):
+    list = []
+    for element in booms:
+        num = len(element.adjacents)
+        adjacent_booms = []
+        for num in range(num):
+            adjacent_booms.append(element.adjacents[num][parameter_position])
+        list.append(adjacent_booms)
+    return list
+
+def get_thickness_list(booms):
+    get_list(booms, 1)
+
+def get_adjacents_list(booms):
+    get_list(booms, 0)
+
+def get_lengths_list(booms):
+    get_list(booms, 2)
+
+def get_common_wall(cells):
+    for wall1 in cells[0]:
+        if wall1 in cells[1]:
+            return wall1
+
 

@@ -113,24 +113,12 @@ def main():
 
     # print data to check
     for it, el in enumerate(booms):
-        print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
+             print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
     print('centroid position : ', aileron_geometry.centroid)
     print('z moment of inertia : ', aileron_geometry.Izz, ' [mm^4]')
     print('y moment of inertia : ', aileron_geometry.Iyy, ' [mm^4]')
     print('zy moment of inertia : ', aileron_geometry.Izy, '[mm^4]')
 
-
-
-
-
-
- #   areas = aileron_geometry.calc_boom_areas(1.1)
- #   print(areas)
- #   aileron_geometry.centroid = (1.0, 0.0)
-  ## aileron_geometry.moment_inertia_Izz()
-    #print(aileron_geometry.Izz, aileron_geometry.Iyy)
-
-    return 0.0
 
 
 main()

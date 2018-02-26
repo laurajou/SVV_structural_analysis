@@ -4,7 +4,7 @@ from helpers import *
 
 
 class Geometry:
-    def __init__(self, number_booms, booms):
+    def __init__(self, number_booms, booms, edges):
         """
         Initialise instance of Geometry that describes an idealised cross-section.
         :param number_booms: number of booms in idealised cross-section.
@@ -12,6 +12,8 @@ class Geometry:
         """
         self.number_booms = number_booms
         self.booms = booms
+        self.edges = edges
+        self.cells = []
         self.boom_areas = np.zeros(self.number_booms)
         self.centroid = np.zeros(2)
         self.neutral_axis = ()  # in the form A, B, C : neutral axis line Az + By + C = 0
@@ -20,6 +22,14 @@ class Geometry:
         self.Iyy = 0.0
         self.Izz = 0.0
         self.Izy = 0.0
+        self.shear_center = 0.0
+
+
+    def construct_geometry(self):
+        for element in self.booms:
+            for edge in self.edges:
+                if element.number in edge.booms:
+                    element.adjacents.append(edge)
 
     def get_areas(self):
         """
@@ -91,5 +101,23 @@ class Geometry:
         Set neutral axis to new value
         """
         self.neutral_axis = (A, B, C)
+
+    def set_cells(self, cells):
+        """
+        :param cells: list of lists. Each sublist contains the nodes that are part of a cell.
+        :return:
+        """
+        self.cells = cells
+
+
+    def calc_shear_center(self, Sz, Sy):
+        """
+        Calculate location of shear centre.
+        Update self.shear_center with the calculated coordinates.
+        :return:
+        """
+
+
+
 
 

@@ -1,9 +1,10 @@
 import numpy as np
 import math
-from helpers import *
+import helpers
+import edges
 
 class Boom():
-    def __init__(self, coordinates, adjacents, stringer_area, neutral_axis):
+    def __init__(self, number, coordinates, stringer_area, neutral_axis):
         """
         Initialise instance of boom for structural idealisation.
         :param coordinates: coordinates (z, y) of boom location. Origin is taken at hinge point.
@@ -15,16 +16,33 @@ class Boom():
         self.neutral_axis = neutral_axis   # NEUTRAL AXIS OF ENTIRE CROSS SECTION
         self.coordinates = coordinates
         # format: np array of lists containing 1) adjacents 2) thickness of link 3) length of link
-        self.adjacents = adjacents
+        self.adjacents = []
         self.stringer_area = stringer_area
         self.dist_neutral_axis = 0.0
         self.area = 0.0
+        self.z_dist = 0.0
+        self.y_dist = 0.0
+        self.number = number
 
     def calc_distance_neutral_axis(self):
         """
         :return: distance from boom to neutral axis
         """
-        self.dist_neutral_axis = distance_point_line(self.coordinates, self.neutral_axis)
+        self.dist_neutral_axis = helpers.distance_point_line(self.coordinates, self.neutral_axis)
+
+    def calc_y_dist(self, aileron_geometry):
+        """
+        :param aileron_geometry: geometry of the cross-section, we need the centroid from it
+        :return: distance from boom to centroid in y-direction
+        """
+        self.y_dist = self.coordinates[1] - aileron_geometry.centroid[1]
+
+    def calc_z_dist(self, aileron_geometry):
+        """
+        :param aileron_geometry: geometry of the cross-section, we need the centroid from it
+        :return: distance from boom to centroid in z-direction
+        """
+        self.z_dist = self.coordinates[0] - aileron_geometry.centroid[0]
 
     def calculate_area(self, aileron_geometry):
         # TODO: ONLY WORKS IF COORDINATE ORIGIN IS IN THE LINE OF SYMMETRY, THIS NEEDS TO BE CHANGED FOR GENERALITY!
@@ -34,14 +52,18 @@ class Boom():
         :param aileron_geometry: instance of class Geometry describing the geometrical properties of the cross-section
         :return: area of boom
         """
+
         boom_area = self.stringer_area
         self.calc_distance_neutral_axis()
-        for adjacent_boom in self.adjacents:
-            boom = adjacent_boom[0]   # boom number NEED FOR BOOM OBJECT, NOT NUMBER
+        for adjacent_edge in self.adjacents:
+            if adjacent_edge.booms[0] != self.number:
+                boom = adjacent_edge.booms[0]
+            else:
+                boom = adjacent_edge.booms[1]
             boom_obj = aileron_geometry.booms[boom]
             boom_obj.calc_distance_neutral_axis()
-            t = adjacent_boom[1]      # thickness of link
-            l = adjacent_boom[2]      # length of link
+            t = adjacent_edge.thickness     # thickness of link
+            l = adjacent_edge.length        # length of link
             if boom_obj.coordinates[0] == self.coordinates[0] and boom_obj.coordinates[1] == - self.coordinates[1]:
                 ratio = -1
             else:
