@@ -125,7 +125,7 @@ class TestGeometry(unittest.TestCase):
         edge56 = edges.Edge([5, 6], 0.915, 356)
         edge67 = edges.Edge([6, 7], 0.915, 356)
         edge_list = [edge25, edge12, edge01, edge70, edge67, edge56, edge25, edge54, edge43, edge32]
-        problem_23_6 = geometry.Geometry(8, boom_list, edge_list)
+        problem_23_6 = geometry.Geometry(8, boom_list, edge_list, [217872, 167780], 24.2*10**9)
         problem_23_6.set_cells([[edge25, edge56, edge67, edge70, edge01, edge12], [edge25, edge54, edge43, edge32]])
         boom0.area = 1290
         boom1.area = 645
@@ -149,12 +149,12 @@ class TestGeometry(unittest.TestCase):
 
         self.assertTrue(abs(problem_23_6.Izz * 10**(-6) - 181.2) < 1)
         # calculate shear flow due to shear forces
+
+        T = lambda x: 10 ** 6
         problem_23_6_section = structural_analysis.DiscreteSection(neutral_axis, problem_23_6)
         problem_23_6_section.calc_shear_flow(0, 66750)
-        for edge in edge_list:
-            print('q0 : ', edge.q_0)
-            print('q_B : ', edge.q_B)
-            print('q_total : ', edge.q_total)
+        print('calculation of the shear flow due to torsion')
+        problem_23_6_section.torsion_shear_flow(T, problem_23_6, 1.0)
 
 
     def test_helper(self):

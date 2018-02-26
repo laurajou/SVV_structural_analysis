@@ -105,3 +105,32 @@ class DiscreteSection():
             wall.q_total = wall.q_0 + wall.get_q_B()
 
 
+    def torsion_shear_flow(self, T, aileron_geometry, span_location):
+        common_wall = get_common_wall(aileron_geometry.cells)
+        integral_cell_0, integral_cell_1 = 0.0, 0.0
+        for i, wall in enumerate(aileron_geometry.cells[0]):
+            integral_cell_0 += (wall.length/(wall.thickness * aileron_geometry.G))/(2 * aileron_geometry.cells_area[0])
+        for n, edge in enumerate(aileron_geometry.cells[1]):
+            integral_cell_1 += (wall.length/(wall.thickness * aileron_geometry.G))/(2 * aileron_geometry.cells_area[1])
+        common_term_0 = common_wall.length / \
+                        (2 * aileron_geometry.cells_area[1] * common_wall.thickness * aileron_geometry.G)
+        common_term_1 = common_wall.length / \
+                        (2 * aileron_geometry.cells_area[0] * common_wall.thickness * aileron_geometry.G)
+
+        A = np.array([[1, 1, 0, 0],
+                  [-1, 0, 2 * aileron_geometry.cells_area[0], 0],
+                  [0, -1, 0, 2 * aileron_geometry.cells_area[1]],
+                  [0, 0, integral_cell_0 + common_term_0, - integral_cell_1 - common_term_1]])
+        B = np.array([[T(span_location)],
+                      [0],
+                      [0],
+                      [0]])
+
+        solutions = np.linalg.solve(A, B)
+
+        T_0, T_1 = solutions[0], solutions[1]
+        q_T_0, q_T_1 = solutions[2], solutions[3]
+        print('integral of cell 0', integral_cell_0)
+        twist_rate = q_T_0 * integral_cell_0 - q_T_1 * common_term_0
+        print(solutions)
+        print('twist rate : ', twist_rate)

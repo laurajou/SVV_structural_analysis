@@ -4,7 +4,7 @@ from helpers import *
 
 
 class Geometry:
-    def __init__(self, number_booms, booms, edges):
+    def __init__(self, number_booms, booms, edges, cells_area, G):
         """
         Initialise instance of Geometry that describes an idealised cross-section.
         :param number_booms: number of booms in idealised cross-section.
@@ -23,6 +23,8 @@ class Geometry:
         self.Izz = 0.0
         self.Izy = 0.0
         self.shear_center = 0.0
+        self.cells_area = cells_area
+        self.G = G
 
 
     def construct_geometry(self):
