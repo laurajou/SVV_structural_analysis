@@ -179,11 +179,11 @@ class DiscreteSection:
         Modify the attribute q_total on each wall to the correct value
         """
         self.calc_shear_flow_q_B(Sz, Sy, wall_common)
-        self.calc_closed_section_pure_shear_flow_q_0()
+        self.calc_closed_section_pure_shear_flow_q_0(wall_common)
         self.calc_torsion_shear_flow(T)
 
         for edge in self.aileron_geometry.edges:
-            edge.q_total = edge.q_0 + edge.q_B + edge.q_torque
+            edge.q_total = edge.q_0 + edge.q_B + edge.q_T
 
     def calc_shear_stress(self):
         """

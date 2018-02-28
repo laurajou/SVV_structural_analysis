@@ -270,6 +270,10 @@ def initialise_problem():
     Sz_array = helpers.get_array_Sz_i(file_name)
     Sy_array = helpers.get_array_Sy_i(file_name)
 
+    # FIND NORMAL STRESSES ON BOOMS
+    for boom_member in aileron_geometry.booms:
+        boom_member.calc_bending_stress(0, -200 * 10 ** 2, aileron_geometry)
+
     # set up list for color plots
     twist_rate_list = []
     thetas_list = []
@@ -279,7 +283,7 @@ def initialise_problem():
     print(Sz_array[50], Sy_array[50], Mx_array[50])
     aileron_section = structural_analysis.DiscreteSection(neutral_axis, aileron_geometry)
     aileron_section.calc_total_shear_flow(Sz_array[50], Sy_array[50], Mx_array[50], edge2342)
-    aileron_section.calc_shear_stress(Sz_array[50], Sy_array[50], Mx_array[50], edge2342)
+    aileron_section.calc_shear_stress()
     print('twist rate: ', aileron_section.twist_rate)
     twist_rate_list.append(aileron_section.twist_rate)
     thetas_list.append(0.453786)
@@ -288,9 +292,8 @@ def initialise_problem():
         # create new instance of section with new location
         aileron_section = structural_analysis.DiscreteSection(neutral_axis, aileron_geometry)
         aileron_section.calc_total_shear_flow(Sz_array[i], Sy_array[i], Mx_array[i], edge2342)
-        aileron_section.calc_shear_stress(Sz_array[i], Sy_array[i], Mx_array[i], edge2342)
+        aileron_section.calc_shear_stress()
         twist_rate_list.append(aileron_section.twist_rate)
         thetas_list.append(twist_rate_list[i-1] * step + thetas_list[i-1])
-
 
 initialise_problem()

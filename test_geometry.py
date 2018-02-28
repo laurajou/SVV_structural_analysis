@@ -24,19 +24,6 @@ class TestGeometry(unittest.TestCase):
         #print(example_20_2.Izz, example_20_2.Izy)
         #print('--- end of inertia test ---')
 
-    def boom_area_1(self):
-        # following the example 20.1 of Megson with only one boom.
-        neutral_axis = (0, 1, 0)
-        boom0 = boom.Boom(0, [0, 200], 300, neutral_axis)
-        boom1 = boom.Boom(1, [597.927455, 150], 300, neutral_axis)
-        boom2 = boom.Boom(2, [0, -200], 300, neutral_axis)
-        edge01 = edges.Edge([0, 1], 2, 600)
-        edge02 = edges.Edge([0, 2], 3, 400)
-        example_20_1 = geometry.Geometry(3, [boom0, boom1, boom2], [edge01, edge02], [0.], 0.)
-        example_20_1.construct_geometry()
-        boom0.calculate_area(example_20_1)
-        self.assertTrue(abs(boom0.area - 1050) < 0.1)
-
     def test_inertia1(self):
         # following the example on slide 43 of https://www.slideshare.net/scemd3/lec6aircraft-structural-idealisation-1
         # set up boom architecture
@@ -170,6 +157,7 @@ class TestGeometry(unittest.TestCase):
         self.assertTrue(abs(edge52.q_0 - (-57)) < 1)
 
     def test_problem_23_5_pure_shear(self):
+        # using problem 23.5 in Megson
         # initialise booms
         neutral_axis = (0, 1, 0)
         boom0 = boom.Boom(0, [-635, -127], 0.0, neutral_axis)
@@ -238,9 +226,44 @@ class TestGeometry(unittest.TestCase):
         self.assertTrue(abs(helpers.distance_point_line((5, 6), (-2, 3, 4)) - 3.328) < 0.001)
         self.assertTrue(abs(helpers.distance_point_line((-3, 7), (6, -5, 10)) - 5.506) < 0.001)
 
+    def test_boom_normal_stress(self):
+        # taken from http://www.ltas-cm3.ulg.ac.be/MECA0028-1/StructAeroAircraftComp.pdf
+        # exercise on slide 26
+        boom_list = []
+        neutral_axis = (0, 1, 0)
+        boom0 = boom.Boom(0, [300, - 600], 0.0, neutral_axis)
+        boom_list.append(boom0)
+        boom0.area = 900
+        boom1 = boom.Boom(1, [300, 0], 0.0, neutral_axis)
+        boom_list.append(boom1)
+        boom1.area = 1200
+        boom2 = boom.Boom(2, [300, 600], 0.0, neutral_axis)
+        boom_list.append(boom2)
+        boom2.area = 900
+        boom3 = boom.Boom(3, [- 300, 600], 0.0, neutral_axis)
+        boom_list.append(boom3)
+        boom3.area = 900
+        boom4 = boom.Boom(4, [- 300, 0], 0.0, neutral_axis)
+        boom_list.append(boom4)
+        boom4.area = 1200
+        boom5 = boom.Boom(5, [- 300, - 600], 0.0, neutral_axis)
+        boom_list.append(boom5)
+        boom5.area = 900
+
+        example_liege = geometry.Geometry(6, boom_list, [], [], 0.0)
+        example_liege.get_areas()
+        example_liege.calc_centroid()
+        example_liege.moment_inertia_Iyy()
+        example_liege.moment_inertia_Izz()
+
+        for element in example_liege.booms:
+            element.calc_z_dist(example_liege)
+            element.calc_y_dist(example_liege)
+            element.calc_bending_stress(0, -200*10**2, example_liege)
+            self.assertTrue(abs(abs(element.bending_stress) - 0.0111) < 0.01)
 
 if __name__ == '__main__':
     tester = TestGeometry()
-    tester.test_shear_flow()
-    tester.test_problem_23_5_pure_shear()
+    tester.test_boom_normal_stress()
+   # tester.test_problem_23_5_pure_shear()
 

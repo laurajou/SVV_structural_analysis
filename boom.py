@@ -24,6 +24,7 @@ class Boom():
         self.y_dist = 0.0
         self.number = number
         self.dist_origin_coordinates = 0.0
+        self.bending_stress = None
 
     def calc_distance_neutral_axis(self):
         """
@@ -60,14 +61,11 @@ class Boom():
         self.z_dist = self.coordinates[0] - aileron_geometry.centroid[0]
 
     def calculate_area(self, aileron_geometry):
-        # TODO: ONLY WORKS IF COORDINATE ORIGIN IS IN THE LINE OF SYMMETRY, THIS NEEDS TO BE CHANGED FOR GENERALITY!
         """
         Calculate area of boom following formula 20.1 of Megson
-
         :param aileron_geometry: instance of class Geometry describing the geometrical properties of the cross-section
         :return: area of boom
         """
-
         boom_area = self.stringer_area
         self.calc_distance_neutral_axis()
         for adjacent_edge in self.adjacents:
@@ -87,4 +85,35 @@ class Boom():
                 else:
                     ratio = boom_obj.dist_neutral_axis / self.dist_neutral_axis
             boom_area += (t * l)/6.0 * (2 + ratio)
+        self.area = boom_area
+
+    def calc_bending_stress(self, Mz, My, aileron_geometry):
+        """
+        Calculates bending stresses at given point (z, y) in the particular section of the aileron
+        :param Mz: Moment distribution at given point in x
+        :param My: Moment distribution at given point in x
+        :return: Bending stress at given point in the cross-section at given point in x direction
+        """
+        inertia_term = aileron_geometry.Izz * aileron_geometry.Iyy - aileron_geometry.Izy ** 2
+        moment_contribution = (Mz * (aileron_geometry.Iyy * self.y_dist - aileron_geometry.Izy *self.z_dist) -
+                        My * (aileron_geometry.Izz * self.z_dist - aileron_geometry.Izy * self.y_dist)) / inertia_term
+        self.bending_stress = moment_contribution
+
+    def calc_area_stress(self, aileron_geometry):
+        boom_area = self.stringer_area
+        self.calc_distance_neutral_axis()
+        for adjacent_edge in self.adjacents:
+            if adjacent_edge.booms[0] != self.number:
+                boom = adjacent_edge.booms[0]
+            else:
+                boom = adjacent_edge.booms[1]
+            boom_obj = aileron_geometry.booms[boom]
+            boom_obj.calc_distance_neutral_axis()
+            t = adjacent_edge.thickness  # thickness of link
+            l = adjacent_edge.length  # length of link
+            if abs(self.coordinates[1]) < 0.001:
+                continue
+            else:
+                ratio = boom_obj.bending_stress / self.bending_stress
+            boom_area += (t * l) / 6.0 * (2 + ratio)
         self.area = boom_area

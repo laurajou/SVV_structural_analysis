@@ -88,28 +88,6 @@ class Geometry:
         for n, area in enumerate(self.boom_areas):
             self.Iyy += area * self.z_dists[n] ** 2
 
-
-    def set_neutral_axis(self, A, B, C):
-        """
-        Set neutral axis to new value
-        """
-        self.neutral_axis = (A, B, C)
-
-    def set_cells(self, cells):
-        """
-        :param cells: list of lists. Each sublist contains the nodes that are part of a cell.
-        :return:
-        """
-        self.cells = cells
-
-
-    def calc_shear_center(self, Sz, Sy):
-        """
-        Calculate location of shear centre.
-        Update self.shear_center with the calculated coordinates.
-        :return:
-        """
-
     def plot_edges(self):
         coordinates = []
         for element in self.booms:
