@@ -1,4 +1,4 @@
-class Edge():
+class Edge:
     def __init__(self, booms, thickness, length):
         self.thickness = thickness
         self.length = length
@@ -6,6 +6,8 @@ class Edge():
         self.q_B = 0.0
         self.q_0 = 0.0
         self.q_total = 0.0
+        self.q_T = 0.0
+        self.shear_stress = 0.0
 
     def set_q_B(self, q_b):
         self.q_B = q_b

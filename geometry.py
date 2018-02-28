@@ -88,15 +88,6 @@ class Geometry:
         for n, area in enumerate(self.boom_areas):
             self.Iyy += area * self.z_dists[n] ** 2
 
-    def moment_inertia_Izy(self):
-        """
-        Calculates moment of inertia in zy using Izy = Sigma(Bi * zi * yi)
-        Updates self.Izy to moment of inertia.
-        """
-        self.calc_y_dists()
-        self.calc_z_dists()
-        for i, area in enumerate(self.boom_areas):
-            self.Izy += area * self.z_dists[i] * self.y_dists[i]
 
     def set_neutral_axis(self, A, B, C):
         """
@@ -119,6 +110,25 @@ class Geometry:
         :return:
         """
 
+    def plot_edges(self):
+        coordinates = []
+        for element in self.booms:
+            coordinates.append(element.coordinates)
+        zs = []
+        ys = []
+        n = range(len(coordinates))
+        for boom_coord in coordinates:
+            zs.append(boom_coord[0])
+            ys.append(boom_coord[1])
+        for wall in self.edges:
+            z_positions = [self.booms[wall.booms[0]].coordinates[0], self.booms[wall.booms[1]].coordinates[0]]
+            y_positions = [self.booms[wall.booms[0]].coordinates[1], self.booms[wall.booms[1]].coordinates[1]]
+            plt.plot(z_positions, y_positions)
+        plt.scatter(zs, ys)
+        plt.axhline(0, color='black')
+        for i, txt in enumerate(n):
+            plt.annotate(txt, (zs[i], ys[i]))
+        plt.show()
 
 
 

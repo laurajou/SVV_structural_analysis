@@ -23,12 +23,27 @@ class Boom():
         self.z_dist = 0.0
         self.y_dist = 0.0
         self.number = number
+        self.dist_origin_coordinates = 0.0
 
     def calc_distance_neutral_axis(self):
         """
         :return: distance from boom to neutral axis
         """
         self.dist_neutral_axis = helpers.distance_point_line(self.coordinates, self.neutral_axis)
+
+    def calc_dist_origin_coordinates(self):
+        """
+        calculate the distance from the boom to the origin of coordinates. This is useful to fid the new coordinates
+        after a rotation
+        :return: update value for each boom
+        """
+        self.dist_origin_coordinates = (self.coordinates[0] ** 2 + self.coordinates[1] ** 2) **0.5
+
+    def update_coordinates(self, theta):
+        rotation_matrix = np.array([[np.cos(theta), -np.sin(theta)],
+                                   [np.sin(theta), np.cos(theta)]])
+        new_coords = np.dot(rotation_matrix, np.asarray(self.coordinates))
+        self.coordinates = new_coords
 
     def calc_y_dist(self, aileron_geometry):
         """

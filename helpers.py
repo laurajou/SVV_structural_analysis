@@ -2,6 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import boom
 import geometry
+import numpy as np
 
 def distance(point1, point2):
     z_1, y_1 = point1[0], point1[1]
@@ -25,11 +26,15 @@ def plot_boom_coordinates(coordinates):
     """
     zs = []
     ys = []
+    n = range(len(coordinates))
     for boom_coord in coordinates:
         zs.append(boom_coord[0])
         ys.append(boom_coord[1])
-    plt.axis([-500, 500, -500, 500])
-    plt.scatter(zs, ys)
+    fig, ax = plt.subplots()
+    ax.scatter(zs, ys)
+    plt.axhline(0, color='black')
+    for i, txt in enumerate(n):
+        ax.annotate(txt, (zs[i], ys[i]))
     plt.show()
 
 
@@ -56,5 +61,24 @@ def get_common_wall(cells):
     for wall1 in cells[0]:
         if wall1 in cells[1]:
             return wall1
+
+def get_array_x_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 0]
+    return data
+def get_array_Mx_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 1]
+    return data
+def get_array_My_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 2]
+    return data
+def get_array_Mz_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 3]
+    return data
+def get_array_Sy_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 4]
+    return data
+def get_array_Sz_i(file_name):
+    data = np.genfromtxt(file_name, skip_header=1)[:, 5]
+    return data
 
 
