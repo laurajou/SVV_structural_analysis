@@ -94,9 +94,7 @@ class Boom():
         :param My: Moment distribution at given point in x
         :return: Bending stress at given point in the cross-section at given point in x direction
         """
-        inertia_term = aileron_geometry.Izz * aileron_geometry.Iyy - aileron_geometry.Izy ** 2
-        moment_contribution = (Mz * (aileron_geometry.Iyy * self.y_dist - aileron_geometry.Izy *self.z_dist) -
-                        My * (aileron_geometry.Izz * self.z_dist - aileron_geometry.Izy * self.y_dist)) / inertia_term
+        moment_contribution = (Mz * self.y_dist) / aileron_geometry.Izz + (My * self.z_dist) / aileron_geometry.Iyy
         self.bending_stress = moment_contribution
 
     def calc_area_stress(self, aileron_geometry):

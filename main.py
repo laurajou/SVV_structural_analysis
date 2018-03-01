@@ -243,6 +243,7 @@ def initialise_problem():
     for boom_element in booms:
         boom_element.calc_y_dist(aileron_geometry)
         boom_element.calc_z_dist(aileron_geometry)
+        print(boom_element.number, 'z dist : ', boom_element.z_dist, 'y dist : ', boom_element.y_dist)
     # insert them in aileron_geometry object
     aileron_geometry.get_areas()
 
@@ -276,8 +277,9 @@ def initialise_problem():
         for i, boom_member in enumerate(aileron_geometry.booms):
             boom_member.calc_bending_stress(Mz_array[j], My_array[j], aileron_geometry)
             stress_matrix[i][j] = boom_member.bending_stress
+
     # find maximum stress
-    max_stress_matrix = np.amax(stress_matrix, axis=1) * 10**6
+    max_stress_matrix = np.amax(stress_matrix, axis=1)
     print(max_stress_matrix)
     # set up list for color plots
     twist_rate_list = []
