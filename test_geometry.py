@@ -262,8 +262,53 @@ class TestGeometry(unittest.TestCase):
             element.calc_bending_stress(0, -200*10**2, example_liege)
             self.assertTrue(abs(abs(element.bending_stress) - 0.0111) < 0.01)
 
+    def test_shear_flow_pure_torsion(self):
+        # initialise booms
+        neutral_axis = (0, 1, 0)
+        boom_list = []
+        boom0 = boom.Boom(0, [900, 250], 0.0, neutral_axis)
+        boom_list.append(boom0)
+        boom1 = boom.Boom(1, [900, -250], 0.0, neutral_axis)
+        boom_list.append(boom1)
+        boom2 = boom.Boom(2, [400, -250], 0.0, neutral_axis)
+        boom_list.append(boom2)
+        boom3 = boom.Boom(3, [0, -250], 0.0, neutral_axis)
+        boom_list.append(boom3)
+        boom4 = boom.Boom(4, [0, 250], 0.0, neutral_axis)
+        boom_list.append(boom4)
+        boom5 = boom.Boom(5, [400, 250], 0.0, neutral_axis)
+        boom_list.append(boom5)
+
+        # initialise edges
+        edge_list = []
+        edge01 = edges.Edge([0, 1], 4, 500)
+        edge_list.append(edge01)
+        edge12 = edges.Edge([1, 2], 4, 500)
+        edge_list.append(edge12)
+        edge23 = edges.Edge([2, 3], 2, 400)
+        edge_list.append(edge23)
+        edge34 = edges.Edge([3, 4], 2, 500)
+        edge_list.append(edge34)
+        edge45 = edges.Edge([4, 5], 2, 400)
+        edge_list.append(edge45)
+        edge50 = edges.Edge([5, 0], 4, 500)
+        edge_list.append(edge50)
+        edge52 = edges.Edge([5, 2], 3, 500)
+        edge_list.append(edge52)
+
+        # initialise geometry
+        problem_2_sam = geometry.Geometry(6, boom_list, edge_list, [400*500, 500**2], 27 * 10**3)
+        problem_2_sam.cells = [[edge50, edge01, edge12, edge52], [edge45, edge52, edge34, edge23]]
+        problem_2_sam.construct_geometry()
+
+        # calculate torsion shear flows
+        problem_2_sam_section = structural_analysis.DiscreteSection(neutral_axis, problem_2_sam)
+        problem_2_sam_section.calc_torsion_shear_flow(2.0329 * 10**9, edge52)
+
+        # verify twist rate
+        self.assertTrue(abs(problem_2_sam_section.twist_rate * 10**5 - 8.73) < 1)
+
 if __name__ == '__main__':
     tester = TestGeometry()
-    tester.test_boom_normal_stress()
-   # tester.test_problem_23_5_pure_shear()
+    tester.test_shear_flow_pure_torsion()
 

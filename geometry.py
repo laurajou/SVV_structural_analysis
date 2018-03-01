@@ -94,7 +94,7 @@ class Geometry:
             coordinates.append(element.coordinates)
         zs = []
         ys = []
-        n = range(len(coordinates))
+        n = self.boom_areas
         for boom_coord in coordinates:
             zs.append(boom_coord[0])
             ys.append(boom_coord[1])

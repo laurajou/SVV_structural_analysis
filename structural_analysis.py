@@ -133,23 +133,22 @@ class DiscreteSection:
                     wall.q_0 = q_s_0_array[number_cell]
         wall_common.q_0 = q_s_0_array[0] - q_s_0_array[1]
 
-    def calc_torsion_shear_flow(self, T):
+    def calc_torsion_shear_flow(self, T, common_wall):
         """
         Find the shear due to pure torsion q_T
         :param T: Torque applied on the structure
         Modify the value of q_T on each wall to the correct value
         Compute the twist rate at this point and modify the attribute twist_rate of the section
         """
-        common_wall = get_common_wall(self.aileron_geometry.cells)
         integral_cell_0, integral_cell_1 = 0.0, 0.0
         for i, wall in enumerate(self.aileron_geometry.cells[0]):
             integral_cell_0 += (wall.length/(wall.thickness * self.aileron_geometry.G))/(2 * self.aileron_geometry.cells_area[0])
-        for n, edge in enumerate(self.aileron_geometry.cells[1]):
-            integral_cell_1 += (edge.length/(edge.thickness * self.aileron_geometry.G))/(2 * self.aileron_geometry.cells_area[1])
+        for n, skin in enumerate(self.aileron_geometry.cells[1]):
+            integral_cell_1 += (skin.length/(skin.thickness * self.aileron_geometry.G))/(2 * self.aileron_geometry.cells_area[1])
         common_term_0 = common_wall.length / \
-                        (2 * self.aileron_geometry.cells_area[1] * common_wall.thickness * self.aileron_geometry.G)
-        common_term_1 = common_wall.length / \
                         (2 * self.aileron_geometry.cells_area[0] * common_wall.thickness * self.aileron_geometry.G)
+        common_term_1 = common_wall.length / \
+                        (2 * self.aileron_geometry.cells_area[1] * common_wall.thickness * self.aileron_geometry.G)
 
         A = np.array([[1, 1, 0, 0],
                   [-1, 0, 2 * self.aileron_geometry.cells_area[0], 0],
@@ -180,7 +179,7 @@ class DiscreteSection:
         """
         self.calc_shear_flow_q_B(Sz, Sy, wall_common)
         self.calc_closed_section_pure_shear_flow_q_0(wall_common)
-        self.calc_torsion_shear_flow(T)
+        self.calc_torsion_shear_flow(T, wall_common)
 
         for edge in self.aileron_geometry.edges:
             edge.q_total = edge.q_0 + edge.q_B + edge.q_T
@@ -192,4 +191,4 @@ class DiscreteSection:
         Modify attribute shear_stress on each wall to the correct value
         """
         for wall in self.aileron_geometry.edges:
-            wall.shear_stress = wall.q_total * wall.length
+            wall.shear_stress = wall.q_total / wall.thickness

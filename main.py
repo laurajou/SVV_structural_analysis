@@ -17,22 +17,22 @@ def initialise_problem():
     # for the first eight, they are on a straight line
     coordinates = []
     for n in range(16):
-        coordinates.append([(43.45*10**(-3) - 5.43125*10**(-3)/2 * (n + 1)) * 10, (1.40625*10**(-3)/2 * (n + 1)) * 10])
+        coordinates.append([((43.45 - 5.43125/2 * (n + 1)) * 10), ((1.40625/2 * (n + 1)) * 10)])
     # booms 8, 9 and 10 are along a semi-circle
-    coordinates.append([-112.5*10**(-3) * math.sin(math.pi / 8), 112.5*10**(-3) * math.cos(math.pi / 8)])
-    coordinates.append([-112.5*10**(-3) * math.sin(math.pi / 4), 112.5*10**(-3) * math.cos(math.pi / 4)])
-    coordinates.append([-112.5*10**(-3) * math.sin(3 * math.pi / 8), 112.5*10**(-3) * math.cos(3 * math.pi / 8)])
-    coordinates.append([-112.5*10**(-3), 0.0])
+    coordinates.append([-112.5 * math.sin(math.pi / 8), 112.5 * math.cos(math.pi / 8)])
+    coordinates.append([-112.5 * math.sin(math.pi / 4), 112.5 * math.cos(math.pi / 4)])
+    coordinates.append([-112.5 * math.sin(3 * math.pi / 8), 112.5 * math.cos(3 * math.pi / 8)])
+    coordinates.append([-112.5, 0.0])
 
     # the last 8 are symmetric to the first eight wrt the z-axis
     for i in range(18, -1, -1):
         coords = coordinates[i]
         coordinates.append([coords[0], -coords[1]])
     # the ones on the spar are always at z=0 and distributed equally along the height of the spar
-    coordinates.append([0.0, (22.5 + 45)*10**(-3)])
-    coordinates.append([0.0, 22.5*10**(-3)])
-    coordinates.append([0.0, -22.5*10**(-3)])
-    coordinates.append([0.0, (-22.5 - 45)*10**(-3)])
+    coordinates.append([0.0, (22.5 + 45)])
+    coordinates.append([0.0, 22.5])
+    coordinates.append([0.0, -22.5])
+    coordinates.append([0.0, (-22.5 - 45)])
 
 
     # CREATE BOOM INSTANCES AND INSERT THEM IN GEOMETRY
@@ -89,35 +89,35 @@ def initialise_problem():
     # lower straight line booms
     boom23 = boom.Boom(23, coordinates[23], 0.0, neutral_axis)
     booms.append(boom23)
-    boom24 = boom.Boom(24, coordinates[24], stringer_area, neutral_axis)
+    boom24 = boom.Boom(24, coordinates[24], 0.0, neutral_axis)
     booms.append(boom24)
-    boom25 = boom.Boom(25, coordinates[25], 0.0, neutral_axis)
+    boom25 = boom.Boom(25, coordinates[25], stringer_area, neutral_axis)
     booms.append(boom25)
-    boom26 = boom.Boom(26, coordinates[26], stringer_area, neutral_axis)
+    boom26 = boom.Boom(26, coordinates[26], 0.0, neutral_axis)
     booms.append(boom26)
-    boom27 = boom.Boom(27, coordinates[27], 0.0, neutral_axis)
+    boom27 = boom.Boom(27, coordinates[27], stringer_area, neutral_axis)
     booms.append(boom27)
-    boom28 = boom.Boom(28, coordinates[28], stringer_area, neutral_axis)
+    boom28 = boom.Boom(28, coordinates[28], 0.0, neutral_axis)
     booms.append(boom28)
-    boom29 = boom.Boom(29, coordinates[29], 0.0, neutral_axis)
+    boom29 = boom.Boom(29, coordinates[29], stringer_area, neutral_axis)
     booms.append(boom29)
-    boom30 = boom.Boom(30, coordinates[30], stringer_area, neutral_axis)
+    boom30 = boom.Boom(30, coordinates[30], 0.0, neutral_axis)
     booms.append(boom30)
-    boom31 = boom.Boom(31, coordinates[31], 0.0, neutral_axis)
+    boom31 = boom.Boom(31, coordinates[31], stringer_area, neutral_axis)
     booms.append(boom31)
-    boom32 = boom.Boom(32, coordinates[32], stringer_area, neutral_axis)
+    boom32 = boom.Boom(32, coordinates[32], 0.0, neutral_axis)
     booms.append(boom32)
-    boom33 = boom.Boom(33, coordinates[33], 0.0, neutral_axis)
+    boom33 = boom.Boom(33, coordinates[33], stringer_area, neutral_axis)
     booms.append(boom33)
-    boom34 = boom.Boom(34, coordinates[34], stringer_area, neutral_axis)
+    boom34 = boom.Boom(34, coordinates[34], 0.0, neutral_axis)
     booms.append(boom34)
-    boom35 = boom.Boom(35, coordinates[35], 0.0, neutral_axis)
+    boom35 = boom.Boom(35, coordinates[35], stringer_area, neutral_axis)
     booms.append(boom35)
-    boom36 = boom.Boom(36, coordinates[36], stringer_area, neutral_axis)
+    boom36 = boom.Boom(36, coordinates[36], 0.0, neutral_axis)
     booms.append(boom36)
-    boom37 = boom.Boom(37, coordinates[37], 0.0, neutral_axis)
+    boom37 = boom.Boom(37, coordinates[37], stringer_area, neutral_axis)
     booms.append(boom37)
-    boom38 = boom.Boom(38, coordinates[38], stringer_area, neutral_axis)
+    boom38 = boom.Boom(38, coordinates[38], 0.0, neutral_axis)
     booms.append(boom38)
 
     # booms on the spar
@@ -133,104 +133,104 @@ def initialise_problem():
 
     # CREATE EDGES INSTANCES AND PUT THEM IN A LIST
     edge_list = []
-    edge10 = edges.Edge([1, 0], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge10 = edges.Edge([1, 0], 1.1, 56.103 * 0.5)
     edge_list.append(edge10)
-    edge21 = edges.Edge([2, 1], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge21 = edges.Edge([2, 1], 1.1, 56.103 * 0.5)
     edge_list.append(edge21)
-    edge32 = edges.Edge([3, 2], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge32 = edges.Edge([3, 2], 1.1, 56.103 * 0.5)
     edge_list.append(edge32)
-    edge43 = edges.Edge([4, 3], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge43 = edges.Edge([4, 3], 1.1, 56.103 * 0.5)
     edge_list.append(edge43)
-    edge54 = edges.Edge([5, 4], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge54 = edges.Edge([5, 4], 1.1, 56.103 * 0.5)
     edge_list.append(edge54)
-    edge65 = edges.Edge([6, 5], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge65 = edges.Edge([6, 5], 1.1, 56.103 * 0.5)
     edge_list.append(edge65)
-    edge76 = edges.Edge([7, 6], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge76 = edges.Edge([7, 6], 1.1, 56.103 * 0.5)
     edge_list.append(edge76)
-    edge87 = edges.Edge([8, 7], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge87 = edges.Edge([8, 7], 1.1, 56.103 * 0.5)
     edge_list.append(edge87)
-    edge98 = edges.Edge([9, 8], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge98 = edges.Edge([9, 8], 1.1, 56.103 * 0.5)
     edge_list.append(edge98)
-    edge109 = edges.Edge([10, 9], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge109 = edges.Edge([10, 9], 1.1, 56.103 * 0.5)
     edge_list.append(edge109)
-    edge1110 = edges.Edge([11, 10], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge1110 = edges.Edge([11, 10], 1.1, 56.103 * 0.5)
     edge_list.append(edge1110)
-    edge1211 = edges.Edge([12, 11], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge1211 = edges.Edge([12, 11], 1.1, 56.103 * 0.5)
     edge_list.append(edge1211)
-    edge1312 = edges.Edge([13, 12], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge1312 = edges.Edge([13, 12], 1.1, 56.103 * 0.5)
     edge_list.append(edge1312)
-    edge1413 = edges.Edge([14, 13], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge1413 = edges.Edge([14, 13], 1.1, 56.103 * 0.5)
     edge_list.append(edge1413)
-    edge1514 = edges.Edge([15, 14], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge1514 = edges.Edge([15, 14], 1.1, 56.103 * 0.5)
     edge_list.append(edge1514)
 
-
     # booms on semicircle
-    edge1615 = edges.Edge([16, 15], 1.1*10**(-3), 44.179*10**(-3))
+    edge1615 = edges.Edge([16, 15], 1.1, 44.179)
     edge_list.append(edge1615)
-    edge1716 = edges.Edge([17, 16], 1.1*10**(-3), 44.179*10**(-3))
+    edge1716 = edges.Edge([17, 16], 1.1, 44.179)
     edge_list.append(edge1716)
-    edge1817 = edges.Edge([18, 17], 1.1*10**(-3), 44.179*10**(-3))
+    edge1817 = edges.Edge([18, 17], 1.1, 44.179)
     edge_list.append(edge1817)
-    edge1918 = edges.Edge([19, 18], 1.1*10**(-3), 44.179*10**(-3))
+    edge1918 = edges.Edge([19, 18], 1.1, 44.179)
     edge_list.append(edge1918)
-    edge2019 = edges.Edge([20, 19], 2.9*10**(-3), 44.179*10**(-3))
+    edge2019 = edges.Edge([20, 19], 1.1, 44.179)
     edge_list.append(edge2019)
-    edge2120 = edges.Edge([21, 20], 1.1*10**(-3), 44.179*10**(-3))
+    edge2120 = edges.Edge([21, 20], 1.1, 44.179)
     edge_list.append(edge2120)
-    edge2221 = edges.Edge([22, 21], 1.1*10**(-3), 44.179*10**(-3))
+    edge2221 = edges.Edge([22, 21], 1.1, 44.179)
     edge_list.append(edge2221)
-    edge2322 = edges.Edge([23, 22], 1.1*10**(-3), 44.179*10**(-3))
+    edge2322 = edges.Edge([23, 22], 1.1, 44.179)
     edge_list.append(edge2322)
 
     # booms on lower spar
-    edge2423 = edges.Edge([24, 23], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2423 = edges.Edge([24, 23], 1.1, 56.103 * 0.5)
     edge_list.append(edge2423)
-    edge2524 = edges.Edge([25, 24], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2524 = edges.Edge([25, 24], 1.1, 56.103 * 0.5)
     edge_list.append(edge2524)
-    edge2625 = edges.Edge([26, 25], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2625 = edges.Edge([26, 25], 1.1, 56.103 * 0.5)
     edge_list.append(edge2625)
-    edge2726 = edges.Edge([27, 26], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2726 = edges.Edge([27, 26], 1.1, 56.103 * 0.5)
     edge_list.append(edge2726)
-    edge2827 = edges.Edge([28, 27], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2827 = edges.Edge([28, 27], 1.1, 56.103 * 0.5)
     edge_list.append(edge2827)
-    edge2928 = edges.Edge([29, 28], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge2928 = edges.Edge([29, 28], 1.1, 56.103 * 0.5)
     edge_list.append(edge2928)
-    edge3029 = edges.Edge([30, 29], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3029 = edges.Edge([30, 29], 1.1, 56.103 * 0.5)
     edge_list.append(edge3029)
-    edge3130 = edges.Edge([31, 30], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3130 = edges.Edge([31, 30], 1.1, 56.103 * 0.5)
     edge_list.append(edge3130)
-    edge3231 = edges.Edge([32, 31], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3231 = edges.Edge([32, 31], 1.1, 56.103 * 0.5)
     edge_list.append(edge3231)
-    edge3332 = edges.Edge([33, 32], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3332 = edges.Edge([33, 32], 1.1, 56.103 * 0.5)
     edge_list.append(edge3332)
-    edge3433 = edges.Edge([34, 33], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3433 = edges.Edge([34, 33], 1.1, 56.103 * 0.5)
     edge_list.append(edge3433)
-    edge3534 = edges.Edge([35, 34], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3534 = edges.Edge([35, 34], 1.1, 56.103 * 0.5)
     edge_list.append(edge3534)
-    edge3635 = edges.Edge([36, 35], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3635 = edges.Edge([36, 35], 1.1, 56.103 * 0.5)
     edge_list.append(edge3635)
-    edge3736 = edges.Edge([37, 36], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3736 = edges.Edge([37, 36], 1.1, 56.103 * 0.5)
     edge_list.append(edge3736)
-    edge3837 = edges.Edge([38, 37], 1.1*10**(-3), 56.103 * 0.5*10**(-3))
+    edge3837 = edges.Edge([38, 37], 1.1, 56.103 * 0.5)
     edge_list.append(edge3837)
-    edge038 = edges.Edge([0, 38], 1.1*10**(-3), 56.103*10**(-3))
+    edge038 = edges.Edge([0, 38], 1.1, 56.103)
     edge_list.append(edge038)
 
     # booms on the vertical spar
-    edge3915 = edges.Edge([39, 15], 2.9*10**(-3), 45*10**(-3))
+    edge3915 = edges.Edge([39, 15], 2.9, 45)
     edge_list.append(edge3915)
-    edge4039 = edges.Edge([40, 39], 2.9*10**(-3), 45*10**(-3))
+    edge4039 = edges.Edge([40, 39], 2.9, 45)
     edge_list.append(edge4039)
-    edge4140 = edges.Edge([41, 40], 2.9*10**(-3), 45*10**(-3))
+    edge4140 = edges.Edge([41, 40], 2.9, 45)
     edge_list.append(edge4140)
-    edge4241 = edges.Edge([42, 41], 2.9*10**(-3), 45*10**(-3))
+    edge4241 = edges.Edge([42, 41], 2.9, 45)
     edge_list.append(edge4241)
-    edge2342 = edges.Edge([23, 42], 2.9*10**(-3), 45*10**(-3))
+    edge2342 = edges.Edge([23, 42], 2.9, 45)
     edge_list.append(edge2342)
 
     # CREATE INSTANCE OF AILERON GEOMETRY WITH ALL THE BOOMS
-    aileron_geometry = geometry.Geometry(43, booms, edge_list, [19880.391*10**(-6), 36225*10**(-6)], 28 * 10**9)
+    aileron_geometry = geometry.Geometry(43, booms, edge_list, [19880.391, 36225], 28 * 10**9)
+    aileron_geometry.construct_geometry()
     aileron_geometry.cells = [[edge038, edge3837, edge3736, edge3635, edge3534, edge3433, edge3332, edge3231, edge3130,
                                edge3029, edge2928, edge2827, edge2726, edge2625, edge2524, edge2423, edge2342, edge4241,
                                edge4140, edge4039, edge3915, edge1514, edge1413, edge1312, edge1211, edge1110, edge109,
@@ -245,7 +245,7 @@ def initialise_problem():
         boom_element.calc_z_dist(aileron_geometry)
     # insert them in aileron_geometry object
     aileron_geometry.get_areas()
-    aileron_geometry.construct_geometry()
+
     # calculate centroid position
     aileron_geometry.calc_centroid()
     # calculate moments of inertia
@@ -253,11 +253,11 @@ def initialise_problem():
     aileron_geometry.moment_inertia_Iyy()
 
     # PLOT AND PRINT GEOMETRICAL PROPERTIES
-    aileron_geometry.plot_edges()
-    #for it, el in enumerate(booms):
-       #      print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
-   # print('centroid position : ', aileron_geometry.centroid)
-    #print('z moment of inertia : ', aileron_geometry.Izz, ' [mm^4]')
+   #aileron_geometry.plot_edges()
+  #  for it, el in enumerate(booms):
+   #         print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
+  #  print('centroid position : ', aileron_geometry.centroid)
+   # print('z moment of inertia : ', aileron_geometry.Izz, ' [mm^4]')
     #print('y moment of inertia : ', aileron_geometry.Iyy, ' [mm^4]')
     #print('zy moment of inertia : ', aileron_geometry.Izy, '[mm^4]')
 
@@ -270,30 +270,33 @@ def initialise_problem():
     Sz_array = helpers.get_array_Sz_i(file_name)
     Sy_array = helpers.get_array_Sy_i(file_name)
 
-    # FIND NORMAL STRESSES ON BOOMS
-    for boom_member in aileron_geometry.booms:
-        boom_member.calc_bending_stress(0, -200 * 10 ** 2, aileron_geometry)
-
+    # create a matrix of stresses
+    stress_matrix = np.zeros((43, 101))
+    for j, location in enumerate(x_i_array):
+        for i, boom_member in enumerate(aileron_geometry.booms):
+            boom_member.calc_bending_stress(Mz_array[j], My_array[j], aileron_geometry)
+            stress_matrix[i][j] = boom_member.bending_stress
+    # find maximum stress
+    max_stress_matrix = np.amax(stress_matrix, axis=1) * 10**6
+    print(max_stress_matrix)
     # set up list for color plots
     twist_rate_list = []
     thetas_list = []
     section_numbers = 100
     step = 2771 / section_numbers
-    print('iteration : ', 0)
-    print(Sz_array[50], Sy_array[50], Mx_array[50])
     aileron_section = structural_analysis.DiscreteSection(neutral_axis, aileron_geometry)
-    aileron_section.calc_total_shear_flow(Sz_array[50], Sy_array[50], Mx_array[50], edge2342)
+    aileron_section.calc_total_shear_flow(Sz_array[60], Sy_array[60], Mx_array[60], edge2342)
     aileron_section.calc_shear_stress()
     print('twist rate: ', aileron_section.twist_rate)
     twist_rate_list.append(aileron_section.twist_rate)
     thetas_list.append(0.453786)
+
     for i, x_i in enumerate(x_i_array):
-        print('iteration : ', i)
         # create new instance of section with new location
         aileron_section = structural_analysis.DiscreteSection(neutral_axis, aileron_geometry)
         aileron_section.calc_total_shear_flow(Sz_array[i], Sy_array[i], Mx_array[i], edge2342)
         aileron_section.calc_shear_stress()
         twist_rate_list.append(aileron_section.twist_rate)
         thetas_list.append(twist_rate_list[i-1] * step + thetas_list[i-1])
-
+    print('iteration is over')
 initialise_problem()
