@@ -172,7 +172,7 @@ class DiscreteSection:
         self.calc_torsion_shear_flow(T, wall_common)
 
         for edge in self.aileron_geometry.edges:
-            edge.q_total = edge.q_0 + edge.q_B + edge.q_T
+            edge.q_total = (edge.q_0 + edge.q_B + edge.q_T)/0.1
 
     def calc_shear_stress(self):
         """

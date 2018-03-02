@@ -255,13 +255,13 @@ def initialise_problem():
     aileron_geometry.moment_inertia_Iyy()
 
     # PLOT AND PRINT GEOMETRICAL PROPERTIES FOR VERIFICATION
-   #aileron_geometry.plot_edges()
-  #  for it, el in enumerate(booms):
-   #         print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
-  #  print('centroid position : ', aileron_geometry.centroid)
-   # print('z moment of inertia : ', aileron_geometry.Izz, ' [mm^4]')
-    #print('y moment of inertia : ', aileron_geometry.Iyy, ' [mm^4]')
-    #print('zy moment of inertia : ', aileron_geometry.Izy, '[mm^4]')
+    aileron_geometry.plot_edges()
+    for it, el in enumerate(booms):
+            print('area of boom ', it, ' : ', aileron_geometry.boom_areas[it], '[mm^2]')
+    print('centroid position : ', aileron_geometry.centroid)
+    print('z moment of inertia : ', aileron_geometry.Izz, ' [mm^4]')
+    print('y moment of inertia : ', aileron_geometry.Iyy, ' [mm^4]')
+    print('zy moment of inertia : ', aileron_geometry.Izy, '[mm^4]')
 
     # GET THE LIST OF FORCES AND MOMENTS
     file_name = "Loads.txt"
@@ -281,25 +281,40 @@ def initialise_problem():
 
     # find maximum stress
     max_stress_matrix = np.amax(stress_matrix, axis=1)
-    print(max_stress_matrix)
-    # set up list for color plots
+    # set up matrix of shear stresses
+    stress_matrix_shear = np.zeros((len(aileron_geometry.edges), 101))
+    # set up lists
     twist_rate_list = []
     thetas_list = []
     section_numbers = 100
     step = 2.771 / section_numbers
-    aileron_section = DiscreteSection.DiscreteSection(neutral_axis, aileron_geometry)
-    aileron_section.calc_total_shear_flow(Sz_array[60], Sy_array[60], Mx_array[60], edge2342)
-    aileron_section.calc_shear_stress()
-    print('twist rate: ', aileron_section.twist_rate)
-    twist_rate_list.append(aileron_section.twist_rate)
     thetas_list.append(0.453786)
+    file = open("thetas_list.txt", "w")
 
     for i, x_i in enumerate(x_i_array):
         # create new instance of section with new location
         aileron_section = DiscreteSection.DiscreteSection(neutral_axis, aileron_geometry)
+        # calculate shear flows due to pure shear and torque
         aileron_section.calc_total_shear_flow(Sz_array[i], Sy_array[i], Mx_array[i], edge2342)
+        # calculate shear stress due to total shear flows and insert in the shear stress matrix
         aileron_section.calc_shear_stress()
+        for n1, edge_ex in enumerate(aileron_geometry.edges):
+            stress_matrix_shear[n1][i] = edge_ex.shear_stress
+        # append the twist rate (computed at the same time as torque shear flow) in the twist rate list
         twist_rate_list.append(aileron_section.twist_rate)
-        thetas_list.append(twist_rate_list[i-1] * step + thetas_list[i-1])
-    print('iteration is over')
+        # calculate theta with finite differences, append to the list and copy to the txt file
+        theta = twist_rate_list[i - 1] * step + thetas_list[i - 1]
+        thetas_list.append(theta)
+        file.write(str(float(theta)) + '\n')
+
+    # find the maximum shear stress on each rib
+    print('the maximum shear stress in rib A : ', np.max(stress_matrix_shear[:, 97]))
+    print('the maximum shear stress in rib B : ', np.max(stress_matrix_shear[:, 51]))
+    print('the maximum shear stress in rib C : ', np.max(stress_matrix_shear[:, 41]))
+    print('the maximum shear stress in rib D : ', np.max(stress_matrix_shear[:, 18]))
+# find the maximum normal stress on each rib
+    print('the maximum normal stress in rib A : ', np.max(stress_matrix[:, 97]))
+    print('the maximum normal stress in rib A : ', np.max(stress_matrix[:, 51]))
+    print('the maximum normal stress in rib A : ', np.max(stress_matrix[:, 41]))
+    print('the maximum normal stress in rib A : ', np.max(stress_matrix[:, 18]))
 initialise_problem()
