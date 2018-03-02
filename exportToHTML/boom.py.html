@@ -1,0 +1,121 @@
+<html>
+<head>
+<title>boom.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #475f63; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(199,146,234); font-style: italic; }
+.s1 { color: rgb(195,206,227); }
+.s2 { color: rgb(137,221,255); }
+.s3 { color: rgb(84,110,122); font-style: italic; }
+.s4 { color: rgb(247,140,108); }
+</style>
+</head>
+<BODY BGCOLOR="#263238">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+boom.py</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<a name="l1"><span class="ln">1    </span></a><span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np 
+<a name="l2"><span class="ln">2    </span></a></span><span class="s0">import </span><span class="s1">math 
+<a name="l3"><span class="ln">3    </span></a></span><span class="s0">import </span><span class="s1">helpers 
+<a name="l4"><span class="ln">4    </span></a></span><span class="s0">import </span><span class="s1">edges 
+<a name="l5"><span class="ln">5    </span></a> 
+<a name="l6"><span class="ln">6    </span></a></span><span class="s0">class </span><span class="s1">Boom</span><span class="s2">():</span><span class="s1"> 
+<a name="l7"><span class="ln">7    </span></a>    </span><span class="s0">def </span><span class="s1">__init__</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">number</span><span class="s2">, </span><span class="s1">coordinates</span><span class="s2">, </span><span class="s1">stringer_area</span><span class="s2">, </span><span class="s1">neutral_axis</span><span class="s2">):</span><span class="s1"> 
+<a name="l8"><span class="ln">8    </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l9"><span class="ln">9    </span></a>        Initialise instance of boom for structural idealisation. 
+<a name="l10"><span class="ln">10   </span></a>        :param coordinates: coordinates (z, y) of boom location. Origin is taken at hinge point. 
+<a name="l11"><span class="ln">11   </span></a>        :param adjacents: list of adjacent booms. List of number_booms length where each element is a list that contains 
+<a name="l12"><span class="ln">12   </span></a>        details about each adjacent boom. Each element contains [boom number, thickness of edge, length of edge]. 
+<a name="l13"><span class="ln">13   </span></a>        :param stringer_area: Area of the stringers. If there are no stringers in the place of the boom, set to 0.0. 
+<a name="l14"><span class="ln">14   </span></a>        :param neutral_axis: line of the neutral axis. Format: (A, B, C) where the neutral axis: Ax + By + C = 0 
+<a name="l15"><span class="ln">15   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l16"><span class="ln">16   </span></a>        self</span><span class="s2">.</span><span class="s1">neutral_axis </span><span class="s2">= </span><span class="s1">neutral_axis 
+<a name="l17"><span class="ln">17   </span></a>        self</span><span class="s2">.</span><span class="s1">coordinates </span><span class="s2">= </span><span class="s1">coordinates 
+<a name="l18"><span class="ln">18   </span></a>        self</span><span class="s2">.</span><span class="s1">adjacents </span><span class="s2">= []</span><span class="s1"> 
+<a name="l19"><span class="ln">19   </span></a>        self</span><span class="s2">.</span><span class="s1">stringer_area </span><span class="s2">= </span><span class="s1">stringer_area 
+<a name="l20"><span class="ln">20   </span></a>        self</span><span class="s2">.</span><span class="s1">dist_neutral_axis </span><span class="s2">= </span><span class="s4">0.0</span><span class="s1"> 
+<a name="l21"><span class="ln">21   </span></a>        self</span><span class="s2">.</span><span class="s1">area </span><span class="s2">= </span><span class="s4">0.0</span><span class="s1"> 
+<a name="l22"><span class="ln">22   </span></a>        self</span><span class="s2">.</span><span class="s1">z_dist </span><span class="s2">= </span><span class="s4">0.0</span><span class="s1"> 
+<a name="l23"><span class="ln">23   </span></a>        self</span><span class="s2">.</span><span class="s1">y_dist </span><span class="s2">= </span><span class="s4">0.0</span><span class="s1"> 
+<a name="l24"><span class="ln">24   </span></a>        self</span><span class="s2">.</span><span class="s1">number </span><span class="s2">= </span><span class="s1">number 
+<a name="l25"><span class="ln">25   </span></a>        self</span><span class="s2">.</span><span class="s1">dist_origin_coordinates </span><span class="s2">= </span><span class="s4">0.0</span><span class="s1"> 
+<a name="l26"><span class="ln">26   </span></a>        self</span><span class="s2">.</span><span class="s1">bending_stress </span><span class="s2">= </span><span class="s0">None</span><span class="s1"> 
+<a name="l27"><span class="ln">27   </span></a> 
+<a name="l28"><span class="ln">28   </span></a>    </span><span class="s0">def </span><span class="s1">calc_distance_neutral_axis</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span><span class="s1"> 
+<a name="l29"><span class="ln">29   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l30"><span class="ln">30   </span></a>        calculate and update distance from boom to neutral axis 
+<a name="l31"><span class="ln">31   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l32"><span class="ln">32   </span></a>        self</span><span class="s2">.</span><span class="s1">dist_neutral_axis </span><span class="s2">= </span><span class="s1">helpers</span><span class="s2">.</span><span class="s1">distance_point_line</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">, </span><span class="s1">self</span><span class="s2">.</span><span class="s1">neutral_axis</span><span class="s2">)</span><span class="s1"> 
+<a name="l33"><span class="ln">33   </span></a> 
+<a name="l34"><span class="ln">34   </span></a>    </span><span class="s0">def </span><span class="s1">calc_dist_origin_coordinates</span><span class="s2">(</span><span class="s1">self</span><span class="s2">):</span><span class="s1"> 
+<a name="l35"><span class="ln">35   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l36"><span class="ln">36   </span></a>        calculate the distance from the boom to the origin of coordinates. This is useful to fid the new coordinates 
+<a name="l37"><span class="ln">37   </span></a>        after a rotation 
+<a name="l38"><span class="ln">38   </span></a>        update value for each boom 
+<a name="l39"><span class="ln">39   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l40"><span class="ln">40   </span></a>        self</span><span class="s2">.</span><span class="s1">dist_origin_coordinates </span><span class="s2">= (</span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] ** </span><span class="s4">2 </span><span class="s2">+ </span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">1</span><span class="s2">] ** </span><span class="s4">2</span><span class="s2">) **</span><span class="s4">0.5</span><span class="s1"> 
+<a name="l41"><span class="ln">41   </span></a> 
+<a name="l42"><span class="ln">42   </span></a>    </span><span class="s0">def </span><span class="s1">update_coordinates</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">theta</span><span class="s2">):</span><span class="s1"> 
+<a name="l43"><span class="ln">43   </span></a>        rotation_matrix </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">array</span><span class="s2">([[</span><span class="s1">np</span><span class="s2">.</span><span class="s1">cos</span><span class="s2">(</span><span class="s1">theta</span><span class="s2">), -</span><span class="s1">np</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s1">theta</span><span class="s2">)],</span><span class="s1"> 
+<a name="l44"><span class="ln">44   </span></a>                                   </span><span class="s2">[</span><span class="s1">np</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s1">theta</span><span class="s2">), </span><span class="s1">np</span><span class="s2">.</span><span class="s1">cos</span><span class="s2">(</span><span class="s1">theta</span><span class="s2">)]])</span><span class="s1"> 
+<a name="l45"><span class="ln">45   </span></a>        new_coords </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">dot</span><span class="s2">(</span><span class="s1">rotation_matrix</span><span class="s2">, </span><span class="s1">np</span><span class="s2">.</span><span class="s1">asarray</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">))</span><span class="s1"> 
+<a name="l46"><span class="ln">46   </span></a>        self</span><span class="s2">.</span><span class="s1">coordinates </span><span class="s2">= </span><span class="s1">new_coords 
+<a name="l47"><span class="ln">47   </span></a> 
+<a name="l48"><span class="ln">48   </span></a>    </span><span class="s0">def </span><span class="s1">calc_y_dist</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">aileron_geometry</span><span class="s2">):</span><span class="s1"> 
+<a name="l49"><span class="ln">49   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l50"><span class="ln">50   </span></a>        :param aileron_geometry: geometry of the cross-section, we need the centroid from it 
+<a name="l51"><span class="ln">51   </span></a>        update distance from boom to centroid in y-direction 
+<a name="l52"><span class="ln">52   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l53"><span class="ln">53   </span></a>        self</span><span class="s2">.</span><span class="s1">y_dist </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">1</span><span class="s2">] - </span><span class="s1">aileron_geometry</span><span class="s2">.</span><span class="s1">centroid</span><span class="s2">[</span><span class="s4">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l54"><span class="ln">54   </span></a> 
+<a name="l55"><span class="ln">55   </span></a>    </span><span class="s0">def </span><span class="s1">calc_z_dist</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">aileron_geometry</span><span class="s2">):</span><span class="s1"> 
+<a name="l56"><span class="ln">56   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l57"><span class="ln">57   </span></a>        :param aileron_geometry: geometry of the cross-section, we need the centroid from it 
+<a name="l58"><span class="ln">58   </span></a>        update distance from boom to centroid in z-direction 
+<a name="l59"><span class="ln">59   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l60"><span class="ln">60   </span></a>        self</span><span class="s2">.</span><span class="s1">z_dist </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] - </span><span class="s1">aileron_geometry</span><span class="s2">.</span><span class="s1">centroid</span><span class="s2">[</span><span class="s4">0</span><span class="s2">]</span><span class="s1"> 
+<a name="l61"><span class="ln">61   </span></a> 
+<a name="l62"><span class="ln">62   </span></a>    </span><span class="s0">def </span><span class="s1">calculate_area</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">aileron_geometry</span><span class="s2">):</span><span class="s1"> 
+<a name="l63"><span class="ln">63   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l64"><span class="ln">64   </span></a>        Calculate area of boom following formula 20.1 of Megson 
+<a name="l65"><span class="ln">65   </span></a>        :param aileron_geometry: instance of class Geometry describing the geometrical properties of the cross-section 
+<a name="l66"><span class="ln">66   </span></a>        update area of boom 
+<a name="l67"><span class="ln">67   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l68"><span class="ln">68   </span></a>        boom_area </span><span class="s2">= </span><span class="s1">self</span><span class="s2">.</span><span class="s1">stringer_area 
+<a name="l69"><span class="ln">69   </span></a>        self</span><span class="s2">.</span><span class="s1">calc_distance_neutral_axis</span><span class="s2">()</span><span class="s1"> 
+<a name="l70"><span class="ln">70   </span></a>        </span><span class="s0">for </span><span class="s1">adjacent_edge </span><span class="s0">in </span><span class="s1">self</span><span class="s2">.</span><span class="s1">adjacents</span><span class="s2">:</span><span class="s1"> 
+<a name="l71"><span class="ln">71   </span></a>            </span><span class="s0">if </span><span class="s1">adjacent_edge</span><span class="s2">.</span><span class="s1">booms</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] != </span><span class="s1">self</span><span class="s2">.</span><span class="s1">number</span><span class="s2">:</span><span class="s1"> 
+<a name="l72"><span class="ln">72   </span></a>                boom </span><span class="s2">= </span><span class="s1">adjacent_edge</span><span class="s2">.</span><span class="s1">booms</span><span class="s2">[</span><span class="s4">0</span><span class="s2">]</span><span class="s1"> 
+<a name="l73"><span class="ln">73   </span></a>            </span><span class="s0">else</span><span class="s2">:</span><span class="s1"> 
+<a name="l74"><span class="ln">74   </span></a>                boom </span><span class="s2">= </span><span class="s1">adjacent_edge</span><span class="s2">.</span><span class="s1">booms</span><span class="s2">[</span><span class="s4">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l75"><span class="ln">75   </span></a>            boom_obj </span><span class="s2">= </span><span class="s1">aileron_geometry</span><span class="s2">.</span><span class="s1">booms</span><span class="s2">[</span><span class="s1">boom</span><span class="s2">]</span><span class="s1"> 
+<a name="l76"><span class="ln">76   </span></a>            boom_obj</span><span class="s2">.</span><span class="s1">calc_distance_neutral_axis</span><span class="s2">()</span><span class="s1"> 
+<a name="l77"><span class="ln">77   </span></a>            t </span><span class="s2">= </span><span class="s1">adjacent_edge</span><span class="s2">.</span><span class="s1">thickness     </span><span class="s3"># thickness of link</span><span class="s1"> 
+<a name="l78"><span class="ln">78   </span></a>            l </span><span class="s2">= </span><span class="s1">adjacent_edge</span><span class="s2">.</span><span class="s1">length        </span><span class="s3"># length of link</span><span class="s1"> 
+<a name="l79"><span class="ln">79   </span></a>            </span><span class="s0">if </span><span class="s1">boom_obj</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] == </span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">0</span><span class="s2">] </span><span class="s0">and </span><span class="s1">boom_obj</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">1</span><span class="s2">] == - </span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">1</span><span class="s2">]:</span><span class="s1"> 
+<a name="l80"><span class="ln">80   </span></a>                ratio </span><span class="s2">= -</span><span class="s4">1</span><span class="s1"> 
+<a name="l81"><span class="ln">81   </span></a>            </span><span class="s0">else</span><span class="s2">:</span><span class="s1"> 
+<a name="l82"><span class="ln">82   </span></a>                </span><span class="s0">if </span><span class="s1">abs</span><span class="s2">(</span><span class="s1">self</span><span class="s2">.</span><span class="s1">coordinates</span><span class="s2">[</span><span class="s4">1</span><span class="s2">]) &lt; </span><span class="s4">0.001</span><span class="s2">:</span><span class="s1"> 
+<a name="l83"><span class="ln">83   </span></a>                    </span><span class="s0">continue</span><span class="s1"> 
+<a name="l84"><span class="ln">84   </span></a>                </span><span class="s0">else</span><span class="s2">:</span><span class="s1"> 
+<a name="l85"><span class="ln">85   </span></a>                    ratio </span><span class="s2">= </span><span class="s1">boom_obj</span><span class="s2">.</span><span class="s1">dist_neutral_axis </span><span class="s2">/ </span><span class="s1">self</span><span class="s2">.</span><span class="s1">dist_neutral_axis 
+<a name="l86"><span class="ln">86   </span></a>            boom_area </span><span class="s2">+= (</span><span class="s1">t </span><span class="s2">* </span><span class="s1">l</span><span class="s2">)/</span><span class="s4">6.0 </span><span class="s2">* (</span><span class="s4">2 </span><span class="s2">+ </span><span class="s1">ratio</span><span class="s2">)</span><span class="s1"> 
+<a name="l87"><span class="ln">87   </span></a>        self</span><span class="s2">.</span><span class="s1">area </span><span class="s2">= </span><span class="s1">boom_area 
+<a name="l88"><span class="ln">88   </span></a> 
+<a name="l89"><span class="ln">89   </span></a>    </span><span class="s0">def </span><span class="s1">calc_bending_stress</span><span class="s2">(</span><span class="s1">self</span><span class="s2">, </span><span class="s1">Mz</span><span class="s2">, </span><span class="s1">My</span><span class="s2">, </span><span class="s1">aileron_geometry</span><span class="s2">):</span><span class="s1"> 
+<a name="l90"><span class="ln">90   </span></a>        </span><span class="s3">&quot;&quot;&quot; 
+<a name="l91"><span class="ln">91   </span></a>        Calculates bending stresses at given point (z, y) in the particular section of the aileron 
+<a name="l92"><span class="ln">92   </span></a>        :param Mz: Moment distribution at given point in x 
+<a name="l93"><span class="ln">93   </span></a>        :param My: Moment distribution at given point in x 
+<a name="l94"><span class="ln">94   </span></a>        update Bending stress at given point in the cross-section at given point in x direction 
+<a name="l95"><span class="ln">95   </span></a>        &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l96"><span class="ln">96   </span></a>        moment_contribution </span><span class="s2">= (</span><span class="s1">Mz </span><span class="s2">* </span><span class="s1">self</span><span class="s2">.</span><span class="s1">y_dist</span><span class="s2">) / </span><span class="s1">aileron_geometry</span><span class="s2">.</span><span class="s1">Izz </span><span class="s2">+ (</span><span class="s1">My </span><span class="s2">* </span><span class="s1">self</span><span class="s2">.</span><span class="s1">z_dist</span><span class="s2">) / </span><span class="s1">aileron_geometry</span><span class="s2">.</span><span class="s1">Iyy 
+<a name="l97"><span class="ln">97   </span></a>        self</span><span class="s2">.</span><span class="s1">bending_stress </span><span class="s2">= </span><span class="s1">moment_contribution 
+<a name="l98"><span class="ln">98   </span></a> 
+<a name="l99"><span class="ln">99   </span></a></span></pre>
+</body>
+</html>

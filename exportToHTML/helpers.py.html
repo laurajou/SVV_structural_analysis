@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>helpers.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #475f63; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(199,146,234); font-style: italic; }
+.s1 { color: rgb(195,206,227); }
+.s2 { color: rgb(137,221,255); }
+.s3 { color: rgb(247,140,108); }
+.s4 { color: rgb(84,110,122); font-style: italic; }
+.s5 { color: rgb(195,232,141); }
+</style>
+</head>
+<BODY BGCOLOR="#263238">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+helpers.py</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<a name="l1"><span class="ln">1    </span></a><span class="s0">import </span><span class="s1">math 
+<a name="l2"><span class="ln">2    </span></a></span><span class="s0">import </span><span class="s1">matplotlib</span><span class="s2">.</span><span class="s1">pyplot </span><span class="s0">as </span><span class="s1">plt 
+<a name="l3"><span class="ln">3    </span></a></span><span class="s0">import </span><span class="s1">boom 
+<a name="l4"><span class="ln">4    </span></a></span><span class="s0">import </span><span class="s1">geometry 
+<a name="l5"><span class="ln">5    </span></a></span><span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np 
+<a name="l6"><span class="ln">6    </span></a> 
+<a name="l7"><span class="ln">7    </span></a></span><span class="s0">def </span><span class="s1">distance</span><span class="s2">(</span><span class="s1">point1</span><span class="s2">, </span><span class="s1">point2</span><span class="s2">):</span><span class="s1"> 
+<a name="l8"><span class="ln">8    </span></a>    z_1</span><span class="s2">, </span><span class="s1">y_1 </span><span class="s2">= </span><span class="s1">point1</span><span class="s2">[</span><span class="s3">0</span><span class="s2">], </span><span class="s1">point1</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l9"><span class="ln">9    </span></a>    z_2</span><span class="s2">, </span><span class="s1">y_2 </span><span class="s2">= </span><span class="s1">point2</span><span class="s2">[</span><span class="s3">0</span><span class="s2">], </span><span class="s1">point2</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l10"><span class="ln">10   </span></a>    </span><span class="s0">return </span><span class="s1">math</span><span class="s2">.</span><span class="s1">sqrt</span><span class="s2">((</span><span class="s1">y_1 </span><span class="s2">- </span><span class="s1">y_2</span><span class="s2">)**</span><span class="s3">2 </span><span class="s2">+ (</span><span class="s1">z_1 </span><span class="s2">- </span><span class="s1">z_2</span><span class="s2">)**</span><span class="s3">2</span><span class="s2">)</span><span class="s1"> 
+<a name="l11"><span class="ln">11   </span></a> 
+<a name="l12"><span class="ln">12   </span></a></span><span class="s0">def </span><span class="s1">distance_point_line</span><span class="s2">(</span><span class="s1">point</span><span class="s2">, </span><span class="s1">line</span><span class="s2">):</span><span class="s1"> 
+<a name="l13"><span class="ln">13   </span></a>    </span><span class="s4">&quot;&quot;&quot; 
+<a name="l14"><span class="ln">14   </span></a>    :param point: tuple (z, y) containing point coordinates 
+<a name="l15"><span class="ln">15   </span></a>    :param line: tuple (A, B, C) containing line such that Az + By + C = 0 
+<a name="l16"><span class="ln">16   </span></a>    :return: euclidean distance between line and point 
+<a name="l17"><span class="ln">17   </span></a>    &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l18"><span class="ln">18   </span></a>    z</span><span class="s2">, </span><span class="s1">y </span><span class="s2">= </span><span class="s1">point</span><span class="s2">[</span><span class="s3">0</span><span class="s2">], </span><span class="s1">point</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l19"><span class="ln">19   </span></a>    A</span><span class="s2">, </span><span class="s1">B</span><span class="s2">, </span><span class="s1">C </span><span class="s2">= </span><span class="s1">line</span><span class="s2">[</span><span class="s3">0</span><span class="s2">], </span><span class="s1">line</span><span class="s2">[</span><span class="s3">1</span><span class="s2">], </span><span class="s1">line</span><span class="s2">[</span><span class="s3">2</span><span class="s2">]</span><span class="s1"> 
+<a name="l20"><span class="ln">20   </span></a>    </span><span class="s0">return </span><span class="s1">abs</span><span class="s2">(</span><span class="s1">A </span><span class="s2">* </span><span class="s1">z </span><span class="s2">+ </span><span class="s1">B </span><span class="s2">* </span><span class="s1">y </span><span class="s2">+ </span><span class="s1">C</span><span class="s2">) / </span><span class="s1">math</span><span class="s2">.</span><span class="s1">sqrt</span><span class="s2">(</span><span class="s1">A </span><span class="s2">** </span><span class="s3">2 </span><span class="s2">+ </span><span class="s1">B </span><span class="s2">** </span><span class="s3">2</span><span class="s2">)</span><span class="s1"> 
+<a name="l21"><span class="ln">21   </span></a> 
+<a name="l22"><span class="ln">22   </span></a></span><span class="s0">def </span><span class="s1">plot_boom_coordinates</span><span class="s2">(</span><span class="s1">coordinates</span><span class="s2">):</span><span class="s1"> 
+<a name="l23"><span class="ln">23   </span></a>    </span><span class="s4">&quot;&quot;&quot; 
+<a name="l24"><span class="ln">24   </span></a>    Plot coordinates to verify visually that they are correct. 
+<a name="l25"><span class="ln">25   </span></a>    :param coordinates: list of lists [z, y] containing the coordinates of each boom. 
+<a name="l26"><span class="ln">26   </span></a>    &quot;&quot;&quot;</span><span class="s1"> 
+<a name="l27"><span class="ln">27   </span></a>    zs </span><span class="s2">= []</span><span class="s1"> 
+<a name="l28"><span class="ln">28   </span></a>    ys </span><span class="s2">= []</span><span class="s1"> 
+<a name="l29"><span class="ln">29   </span></a>    n </span><span class="s2">= </span><span class="s1">range</span><span class="s2">(</span><span class="s1">len</span><span class="s2">(</span><span class="s1">coordinates</span><span class="s2">))</span><span class="s1"> 
+<a name="l30"><span class="ln">30   </span></a>    </span><span class="s0">for </span><span class="s1">boom_coord </span><span class="s0">in </span><span class="s1">coordinates</span><span class="s2">:</span><span class="s1"> 
+<a name="l31"><span class="ln">31   </span></a>        zs</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">boom_coord</span><span class="s2">[</span><span class="s3">0</span><span class="s2">])</span><span class="s1"> 
+<a name="l32"><span class="ln">32   </span></a>        ys</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">boom_coord</span><span class="s2">[</span><span class="s3">1</span><span class="s2">])</span><span class="s1"> 
+<a name="l33"><span class="ln">33   </span></a>    fig</span><span class="s2">, </span><span class="s1">ax </span><span class="s2">= </span><span class="s1">plt</span><span class="s2">.</span><span class="s1">subplots</span><span class="s2">()</span><span class="s1"> 
+<a name="l34"><span class="ln">34   </span></a>    ax</span><span class="s2">.</span><span class="s1">scatter</span><span class="s2">(</span><span class="s1">zs</span><span class="s2">, </span><span class="s1">ys</span><span class="s2">)</span><span class="s1"> 
+<a name="l35"><span class="ln">35   </span></a>    plt</span><span class="s2">.</span><span class="s1">axhline</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">color</span><span class="s2">=</span><span class="s5">'black'</span><span class="s2">)</span><span class="s1"> 
+<a name="l36"><span class="ln">36   </span></a>    </span><span class="s0">for </span><span class="s1">i</span><span class="s2">, </span><span class="s1">txt </span><span class="s0">in </span><span class="s1">enumerate</span><span class="s2">(</span><span class="s1">n</span><span class="s2">):</span><span class="s1"> 
+<a name="l37"><span class="ln">37   </span></a>        ax</span><span class="s2">.</span><span class="s1">annotate</span><span class="s2">(</span><span class="s1">txt</span><span class="s2">, (</span><span class="s1">zs</span><span class="s2">[</span><span class="s1">i</span><span class="s2">], </span><span class="s1">ys</span><span class="s2">[</span><span class="s1">i</span><span class="s2">]))</span><span class="s1"> 
+<a name="l38"><span class="ln">38   </span></a>    plt</span><span class="s2">.</span><span class="s1">show</span><span class="s2">()</span><span class="s1"> 
+<a name="l39"><span class="ln">39   </span></a> 
+<a name="l40"><span class="ln">40   </span></a> 
+<a name="l41"><span class="ln">41   </span></a></span><span class="s0">def </span><span class="s1">get_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">, </span><span class="s1">parameter_position</span><span class="s2">):</span><span class="s1"> 
+<a name="l42"><span class="ln">42   </span></a>    list </span><span class="s2">= []</span><span class="s1"> 
+<a name="l43"><span class="ln">43   </span></a>    </span><span class="s0">for </span><span class="s1">element </span><span class="s0">in </span><span class="s1">booms</span><span class="s2">:</span><span class="s1"> 
+<a name="l44"><span class="ln">44   </span></a>        num </span><span class="s2">= </span><span class="s1">len</span><span class="s2">(</span><span class="s1">element</span><span class="s2">.</span><span class="s1">adjacents</span><span class="s2">)</span><span class="s1"> 
+<a name="l45"><span class="ln">45   </span></a>        adjacent_booms </span><span class="s2">= []</span><span class="s1"> 
+<a name="l46"><span class="ln">46   </span></a>        </span><span class="s0">for </span><span class="s1">num </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s1">num</span><span class="s2">):</span><span class="s1"> 
+<a name="l47"><span class="ln">47   </span></a>            adjacent_booms</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">element</span><span class="s2">.</span><span class="s1">adjacents</span><span class="s2">[</span><span class="s1">num</span><span class="s2">][</span><span class="s1">parameter_position</span><span class="s2">])</span><span class="s1"> 
+<a name="l48"><span class="ln">48   </span></a>        list</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">adjacent_booms</span><span class="s2">)</span><span class="s1"> 
+<a name="l49"><span class="ln">49   </span></a>    </span><span class="s0">return </span><span class="s1">list 
+<a name="l50"><span class="ln">50   </span></a> 
+<a name="l51"><span class="ln">51   </span></a></span><span class="s0">def </span><span class="s1">get_thickness_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">):</span><span class="s1"> 
+<a name="l52"><span class="ln">52   </span></a>    get_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">, </span><span class="s3">1</span><span class="s2">)</span><span class="s1"> 
+<a name="l53"><span class="ln">53   </span></a> 
+<a name="l54"><span class="ln">54   </span></a></span><span class="s0">def </span><span class="s1">get_adjacents_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">):</span><span class="s1"> 
+<a name="l55"><span class="ln">55   </span></a>    get_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">, </span><span class="s3">0</span><span class="s2">)</span><span class="s1"> 
+<a name="l56"><span class="ln">56   </span></a> 
+<a name="l57"><span class="ln">57   </span></a></span><span class="s0">def </span><span class="s1">get_lengths_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">):</span><span class="s1"> 
+<a name="l58"><span class="ln">58   </span></a>    get_list</span><span class="s2">(</span><span class="s1">booms</span><span class="s2">, </span><span class="s3">2</span><span class="s2">)</span><span class="s1"> 
+<a name="l59"><span class="ln">59   </span></a> 
+<a name="l60"><span class="ln">60   </span></a></span><span class="s0">def </span><span class="s1">get_common_wall</span><span class="s2">(</span><span class="s1">cells</span><span class="s2">):</span><span class="s1"> 
+<a name="l61"><span class="ln">61   </span></a>    </span><span class="s0">for </span><span class="s1">wall1 </span><span class="s0">in </span><span class="s1">cells</span><span class="s2">[</span><span class="s3">0</span><span class="s2">]:</span><span class="s1"> 
+<a name="l62"><span class="ln">62   </span></a>        </span><span class="s0">if </span><span class="s1">wall1 </span><span class="s0">in </span><span class="s1">cells</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]:</span><span class="s1"> 
+<a name="l63"><span class="ln">63   </span></a>            </span><span class="s0">return </span><span class="s1">wall1 
+<a name="l64"><span class="ln">64   </span></a> 
+<a name="l65"><span class="ln">65   </span></a></span><span class="s0">def </span><span class="s1">get_array_x_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l66"><span class="ln">66   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">0</span><span class="s2">]</span><span class="s1"> 
+<a name="l67"><span class="ln">67   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l68"><span class="ln">68   </span></a></span><span class="s0">def </span><span class="s1">get_array_Mx_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l69"><span class="ln">69   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+<a name="l70"><span class="ln">70   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l71"><span class="ln">71   </span></a></span><span class="s0">def </span><span class="s1">get_array_My_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l72"><span class="ln">72   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">2</span><span class="s2">]</span><span class="s1"> 
+<a name="l73"><span class="ln">73   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l74"><span class="ln">74   </span></a></span><span class="s0">def </span><span class="s1">get_array_Mz_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l75"><span class="ln">75   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">3</span><span class="s2">]</span><span class="s1"> 
+<a name="l76"><span class="ln">76   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l77"><span class="ln">77   </span></a></span><span class="s0">def </span><span class="s1">get_array_Sy_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l78"><span class="ln">78   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">4</span><span class="s2">]</span><span class="s1"> 
+<a name="l79"><span class="ln">79   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l80"><span class="ln">80   </span></a></span><span class="s0">def </span><span class="s1">get_array_Sz_i</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">):</span><span class="s1"> 
+<a name="l81"><span class="ln">81   </span></a>    data </span><span class="s2">= </span><span class="s1">np</span><span class="s2">.</span><span class="s1">genfromtxt</span><span class="s2">(</span><span class="s1">file_name</span><span class="s2">, </span><span class="s1">skip_header</span><span class="s2">=</span><span class="s3">1</span><span class="s2">)[:, </span><span class="s3">5</span><span class="s2">]</span><span class="s1"> 
+<a name="l82"><span class="ln">82   </span></a>    </span><span class="s0">return </span><span class="s1">data 
+<a name="l83"><span class="ln">83   </span></a> 
+<a name="l84"><span class="ln">84   </span></a> 
+<a name="l85"><span class="ln">85   </span></a></span></pre>
+</body>
+</html>

@@ -1,5 +1,11 @@
 class Edge:
     def __init__(self, booms, thickness, length):
+        """
+
+        :param booms: list of booms that the edge is uniting
+        :param thickness: thickness of the skin section the edge represents
+        :param length: length of the skin section the edge represents
+        """
         self.thickness = thickness
         self.length = length
         self.booms = booms
@@ -9,8 +15,3 @@ class Edge:
         self.q_T = 0.0
         self.shear_stress = 0.0
 
-    def set_q_B(self, q_b):
-        self.q_B = q_b
-
-    def get_q_B(self):
-        return self.q_B

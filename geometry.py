@@ -6,9 +6,11 @@ from helpers import *
 class Geometry:
     def __init__(self, number_booms, booms, edges, cells_area, G):
         """
-        Initialise instance of Geometry that describes an idealised cross-section.
-        :param number_booms: number of booms in idealised cross-section.
-        :param booms: list of Boom objects.
+        :param number_booms: Number of booms in the cross section
+        :param booms: list of Boom class instances containing all booms in the cross section
+        :param edges: list of Edge class instances containing all edges in the cross section
+        :param cells_area: list containing the areas of the cells (for multicell problems)
+        :param G: shear modulus of the material
         """
         self.number_booms = number_booms
         self.booms = booms
@@ -28,6 +30,10 @@ class Geometry:
 
 
     def construct_geometry(self):
+        """
+        modify all Boom objects. For each object, modify their attribute "adjacents" to include a list of all the edges
+        that contain the boom.
+        """
         for element in self.booms:
             for edge in self.edges:
                 if element.number in edge.booms:
@@ -89,21 +95,24 @@ class Geometry:
             self.Iyy += area * self.z_dists[n] ** 2
 
     def plot_edges(self):
+        """
+        Plot the booms (numbered) and the edges uniting them.
+        This plot is used to verify that the booms and edges created correspond to the correct geometry.
+        """
         coordinates = []
         for element in self.booms:
             coordinates.append(element.coordinates)
         zs = []
         ys = []
-        n = self.boom_areas
+        n = range(len(coordinates))
         for boom_coord in coordinates:
             zs.append(boom_coord[0])
             ys.append(boom_coord[1])
         for wall in self.edges:
             z_positions = [self.booms[wall.booms[0]].coordinates[0], self.booms[wall.booms[1]].coordinates[0]]
             y_positions = [self.booms[wall.booms[0]].coordinates[1], self.booms[wall.booms[1]].coordinates[1]]
-            plt.plot(z_positions, y_positions)
+            plt.plot(z_positions, y_positions, color='black')
         plt.scatter(zs, ys)
-        plt.axhline(0, color='black')
         for i, txt in enumerate(n):
             plt.annotate(txt, (zs[i], ys[i]))
         plt.show()
